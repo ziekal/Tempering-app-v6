@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Tempering App</title>
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-title" content="Tempering App">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#07343d">
+
+<style>
+:root{
+  --bg:#07343d;
+  --panel:#0b4750;
+  --panel2:#0f5964;
+  --cream:#fff0cf;
+  --input:#f4f4f6;
+  --green:#9bd46b;
+  --red:#f08072;
+  --yellow:#f7d66a;
+  --ink:#041f26;
+  --muted:rgba(255,240,207,.75);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(56,143,154,.65) 0, transparent 32%),
+    linear-gradient(160deg,#0d4d58 0%,#07343d 45%,#041f26 100%);
+  color:var(--cream);
+}
+.wrap{
+  width:min(100%,520px);
+  margin:0 auto;
+  padding:22px 14px 40px;
+}
+h1{
+  margin:0 0 24px;
+  text-align:center;
+  font-size:34px;
+  line-height:1.18;
+  font-weight:900;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  text-shadow:0 3px 0 rgba(0,0,0,.35);
+}
+.card{
+  background:rgba(8,70,79,.94);
+  border:1px solid rgba(255,240,207,.18);
+  border-radius:24px;
+  padding:16px;
+  margin:14px 0;
+  box-shadow:0 10px 24px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.08);
+}
+h2{
+  margin:0 0 12px;
+  font-size:16px;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+}
+.field{margin-bottom:13px}
+label{
+  display:block;
+  margin:0 0 7px;
+  font-weight:900;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.45px;
+}
+select,input{
+  width:100%;
+  min-height:45px;
+  border:0;
+  border-radius:14px;
+  padding:10px 12px;
+  font-size:16px;
+  font-weight:800;
+  background:var(--input);
+  color:#000;
+}
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.resultTop{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.stat{
+  background:var(--cream);
+  color:var(--ink);
+  padding:12px;
+  border-radius:16px;
+  font-weight:900;
+  text-align:center;
+}
+.stat.area-ok{
+  background:var(--green);
+}
+.stat.area-bad{
+  background:var(--red);
+}
+.stat small{
+  display:block;
+  font-size:11px;
+  opacity:.75;
+  text-transform:uppercase;
+}
+.stat b{
+  font-size:22px;
+}
+.sash{
+  margin-top:12px;
+  padding:13px;
+  border-radius:18px;
+  background:rgba(255,240,207,.10);
+  border:1px solid rgba(255,240,207,.16);
+}
+.sashTitle{
+  font-weight:900;
+  font-size:15px;
+  margin-bottom:8px;
+  text-transform:uppercase;
+}
+.availGrid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+}
+.badge{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:11px 12px;
+  border-radius:15px;
+  color:#000;
+  font-weight:900;
+}
+.badge.available{background:var(--green)}
+.badge.na{background:var(--red)}
+.badge .status{
+  font-size:12px;
+  text-transform:uppercase;
+}
+.note{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.35;
+  font-weight:700;
+}
+.hidden{display:none}
+.warning{
+  background:var(--yellow);
+  color:#000;
+  padding:12px;
+  border-radius:16px;
+  font-weight:900;
+  margin-top:10px;
+}
+
+.criteria-card{
+  padding:16px;
+}
+.criteria-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+.criteria-icon{
+  width:42px;
+  height:42px;
+  border:3px solid var(--green);
+  border-radius:11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--green);
+  font-size:22px;
+  font-weight:900;
+  flex:0 0 auto;
+}
+.criteria-card h2{
+  color:var(--green);
+  margin:0;
+  font-size:17px;
+  line-height:1.15;
+}
+.criteria-list{
+  margin:0;
+  padding-left:22px;
+}
+.criteria-list li{
+  margin:10px 0;
+  padding-left:3px;
+  color:#fff;
+  font-size:14px;
+  line-height:1.38;
+  font-weight:800;
+}
+.criteria-list li::marker{
+  color:var(--green);
+  font-size:19px;
+}
+.redText{
+  color:#ff5a4f;
+  font-weight:900;
+}
+.resultTop.single{
+  grid-template-columns:1fr;
+}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Tempering<br>App</h1>
+
+  <div class="card criteria-card">
+    <div class="criteria-title">
+      <div class="criteria-icon">✓</div>
+      <h2>Criteria for Tempering</h2>
+    </div>
+    <ul class="criteria-list">
+      <li>All windows with glass within 18 inches of floor and over 9 SQFT <span class="redText">as shown in red.</span></li>
+      <li>Any window glass within 24 inches of door slab and 60 inches or less of the floor. <strong>(SQFT N/A)</strong></li>
+      <li>Any window with a 60 inch radius of stairs and within 36 inches of the floor. <strong>(This applies to exterior stairs.)</strong></li>
+      <li>Any window in a bathroom within 60 inches of the wet zone and less than 60 inches from the ground. <strong>(This applies to exterior pools and hot tubs.)</strong></li>
+    </ul>
+  </div>
+
+
+  <div class="card">
+    <h2>Inputs</h2>
+    <div class="field">
+      <label for="unitType">Unit Type</label>
+      <select id="unitType"></select>
+    </div>
+    <div class="field">
+      <label for="config">Unit Configuration</label>
+      <select id="config"></select>
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label for="width">Unit Width</label>
+        <input id="width" type="number" inputmode="decimal" step="0.001" value="35.5">
+      </div>
+      <div class="field">
+        <label for="height">Unit Height</label>
+        <input id="height" type="number" inputmode="decimal" step="0.001" value="50">
+      </div>
+    </div>
+    <div class="grid2" id="customWrap">
+      <div class="field">
+        <label id="custom1Label" for="custom1">Custom Location 1</label>
+        <input id="custom1" type="number" inputmode="decimal" step="0.001" value="14">
+      </div>
+      <div class="field" id="custom2Box">
+        <label id="custom2Label" for="custom2">Custom Location 2</label>
+        <input id="custom2" type="number" inputmode="decimal" step="0.001" value="50">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Unit Info</h2>
+    <div class="resultTop single">
+      <div class="stat"><small>Sashes</small><b id="sashCount">1</b></div>
+    </div>
+    <div id="sizeWarning" class="warning hidden"></div>
+  </div>
+
+  <div class="card">
+    <h2>Glass Size</h2>
+    <div id="sashResults"></div>
+  </div>
+
+  <div class="card criteria-card">
+    <div class="criteria-title">
+      <div class="criteria-icon">✓</div>
+      <h2>Criteria for Tempering</h2>
+    </div>
+    <ul class="criteria-list">
+      <li>All windows with glass within 18 inches of floor and over 9 SQFT <span class="redText">as shown in red.</span></li>
+      <li>Any window glass within 24 inches of door slab and 60 inches or less of the floor. <strong>(SQFT N/A)</strong></li>
+      <li>Any window with a 60 inch radius of stairs and within 36 inches of the floor. <strong>(This applies to exterior stairs.)</strong></li>
+      <li>Any window in a bathroom within 60 inches of the wet zone and less than 60 inches from the ground. <strong>(This applies to exterior pools and hot tubs.)</strong></li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+const unitCodes = {
+  AN:1, CS:2, CD:3, CT:4, DB:5, FX:6, GL:7, GT:8,
+  PWF:9, SWF:10, PWI:11, SWI:12, UPW:13, USW:14
+};
+
+const configMap = {
+  AN:["NA"], CS:["NA"], FX:["NA"], PWF:["NA"], SWF:["NA"], PWI:["NA"], SWI:["NA"], UPW:["NA"], USW:["NA"],
+  CD:["1:1"],
+  CT:["1:1:1","1:2:1","Custom"],
+  DB:["1:1","2:3","3:2","2:4","4:2","Custom"],
+  GL:["1:1","1:2","2:1","Custom"],
+  GT:["1:1:1","1:2:1","Custom"]
+};
+
+const sizeGrid = [
+  ["AN","NA",16,17,60,36,48,48], ["CS","NA",16,17,40,72,32,80], ["FX","NA",16,17,80,60,60,80],
+  ["PWF","NA",10.5,10.5,106,106,0,0], ["SWF","NA",10.5,10.5,106,106,0,0], ["PWI","NA",10.5,10.5,106,106,0,0],
+  ["SWI","NA",10.5,10.5,106,106,0,0], ["UPW","NA",10.5,10.5,106,106,0,0], ["USW","NA",10.5,10.5,106,106,0,0],
+  ["CD","1:1",31.125,17,79,72,71,80], ["CT","1:1:1",46.3125,17,118,72,105,80],
+  ["CT","1:2:1",60.0625,17,120,72,105,80], ["CT","Custom",46.3125,17,120,72,105,80],
+  ["DB","1:1",16.5,27.75,54,72,48,96], ["DB","2:3",16.5,32.875,54,60.875,48,81.25],
+  ["DB","3:2",16.5,32.875,54,60.875,48,81.25], ["DB","2:4",16.5,38,54,55.375,48,73.75],
+  ["DB","4:2",16.5,38,54,55.375,48,73.75], ["DB","Custom",16.5,27.75,54,72,48,96],
+  ["GL","1:1",22,10.5,96,72,72,80], ["GL","1:2",37,10.5,108,72,56,80],
+  ["GL","2:1",37,10.5,108,72,56,80], ["GL","Custom",37,10.5,108,72,56,80],
+  ["GT","1:1:1",37,10.5,144,72,84,80], ["GT","1:2:1",46,10.5,144,72,84,80], ["GT","Custom",46,10.5,144,72,84,80]
+];
+
+const baseGlass = ["Annealed","Tempered","Laminated","Laminated Tempered","Fern Annealed","Fern Tempered","Obscure Annealed","Obscure Tempered"];
+const patternedGlass = ["Vert Reeded Annealed","Vert Reeded Tempered","Horz. Reeded Annealed","Horz. Reeded Tempered","Cascade Rain Annealed","Cascade Rain Tempered"];
+
+const unitType = document.getElementById("unitType");
+const config = document.getElementById("config");
+const widthInput = document.getElementById("width");
+const heightInput = document.getElementById("height");
+const custom1 = document.getElementById("custom1");
+const custom2 = document.getElementById("custom2");
+const customWrap = document.getElementById("customWrap");
+const custom2Box = document.getElementById("custom2Box");
+const custom1Label = document.getElementById("custom1Label");
+const custom2Label = document.getElementById("custom2Label");
+
+Object.keys(unitCodes).forEach(u=>{
+  const opt = document.createElement("option");
+  opt.value = u;
+  opt.textContent = u;
+  unitType.appendChild(opt);
+});
+unitType.value = "DB";
+
+function fmt(x){
+  return Number(x).toFixed(3).replace(/\.?0+$/,"");
+}
+
+function m2(){
+  return unitCodes[unitType.value];
+}
+
+function dpRating(){
+  const m = m2();
+  if(["DB","GL","GT"].includes(unitType.value)) return "PG40";
+  if(m >= 9) return "PG50";
+  return "PG40*";
+}
+
+function glassHeightSlider(h){
+  return h < 24 ? h - 3.696 - 0.078 - 2.126 - 0.188 : h - 3.696 - 2.126 - 0.188;
+}
+
+function calcSashes(){
+  const u = unitType.value, c = config.value;
+  const w = Number(widthInput.value) || 0;
+  const h = Number(heightInput.value) || 0;
+  const c1 = Number(custom1.value) || 0;
+  const c2 = Number(custom2.value) || 0;
+  let s = [];
+
+  function push(name, gw, gh){ s.push({name, w:gw, h:gh, area:gw*gh/144}); }
+
+  if(["AN","CS","FX"].includes(u)) push("Sash 1", w-5.4435, h-5.4435);
+  else if(["PWF","SWF"].includes(u)) push("Sash 1", w-4.875, h-4.875);
+  else if(["PWI","SWI"].includes(u)) push("Sash 1", w-4, h-4);
+  else if(["UPW","USW"].includes(u)) push("Sash 1", w-4.752, h-4.752);
+  else if(u==="CD"){
+    const gw = w/2 - 1.08 - 0.6225 - 3.2835;
+    push("Sash 1", gw, h-5.4435); push("Sash 2", gw, h-5.4435);
+  }
+  else if(u==="CT" && c==="1:1:1"){
+    const gw = (w-4.65)/3 - 3.2835;
+    push("Sash 1", gw, h-5.4435); push("Sash 2", gw, h-5.4435); push("Sash 3", gw, h-5.4435);
+  }
+  else if(u==="CT" && c==="1:2:1"){
+    push("Sash 1", (w-4.65)/4 - 3.2835, h-5.4435);
+    push("Sash 2", (w-4.65)/2 - 3.2835, h-5.4435);
+    push("Sash 3", (w-4.65)/4 - 3.2835, h-5.4435);
+  }
+  else if(u==="CT" && c==="Custom"){
+    push("Sash 1", c1-5.1165, h-5.4435);
+    push("Sash 2", c2-c1-4.7895, h-5.4435);
+    push("Sash 3", w-c2-5.1165, h-5.4435);
+  }
+  else if(u==="DB"){
+    const gw = w-2.5-2.554;
+    if(c==="1:1"){ const gh=(h-6.274)/2-0.02; push("Sash 1",gw,gh); push("Sash 2",gw,gh); }
+    else if(c==="2:3"){ push("Sash 1",gw,2*(h-6.274)/5-0.02); push("Sash 2",gw,3*(h-6.274)/5-0.02); }
+    else if(c==="3:2"){ push("Sash 1",gw,3*(h-6.274)/5-0.02); push("Sash 2",gw,2*(h-6.274)/5-0.02); }
+    else if(c==="2:4"){ push("Sash 1",gw,2*(h-6.274)/6-0.02); push("Sash 2",gw,4*(h-6.274)/6-0.02); }
+    else if(c==="4:2"){ push("Sash 1",gw,4*(h-6.274)/6-0.02); push("Sash 2",gw,2*(h-6.274)/6-0.02); }
+    else { push("Sash 1",gw,c1+0.291); push("Sash 2",gw,h-c1-0.327); }
+  }
+  else if(u==="GL"){
+    const gh = glassHeightSlider(h);
+    if(c==="1:1"){ const gw=w/2-2.9935; push("Sash 1",gw,gh); push("Sash 2",gw,gh); }
+    else if(c==="1:2"){ push("Sash 1",w/3-1.644,gh); push("Sash 2",2*w/3-4.343,gh); }
+    else if(c==="2:1"){ push("Sash 1",2*w/3-4.343,gh); push("Sash 2",w/3-1.644,gh); }
+    else { push("Sash 1",c1-4.932,gh); push("Sash 2",w-c1-3.167,gh); }
+  }
+  else if(u==="GT"){
+    const gh = glassHeightSlider(h);
+    if(c==="1:1:1"){
+      const gw=w/3-2.3433; push("Sash 1",gw,gh); push("Sash 2",gw,gh); push("Sash 3",gw,gh);
+    } else if(c==="1:2:1"){
+      push("Sash 1",w/4-1.4935,gh); push("Sash 2",w/2-4.043,gh); push("Sash 3",w/4-1.4935,gh);
+    } else {
+      push("Sash 1",c1-4.932,gh); push("Sash 2",w-2*c1-0.334,gh); push("Sash 3",w-c2-4.932,gh);
+    }
+  }
+  return s;
+}
+
+function safeDims(w,h){
+  const mx = Math.max(w,h), mn = Math.min(w,h), area = w*h/144;
+  const diag = Math.sqrt(mx*mx + mn*mn);
+  const safety = ((mx>=10 && mn>=6) || area>=0.525 || diag>=14.5);
+  return {mx,mn,area,ratio: mx/mn, safety};
+}
+
+function availableFor(name, sashIndex, w, h){
+  if(!isFinite(w) || !isFinite(h) || w <= 0 || h <= 0) return false;
+  const dp = dpRating();
+  const m = m2();
+  const d = safeDims(w,h);
+  const isPG40StarAllowed = sashIndex === 3 ? m === 4 : (m === 3 || m === 4);
+
+  if(dp === "PG40*"){
+    if(!isPG40StarAllowed) return false;
+    if(name.includes("Reeded") || name.includes("Cascade Rain")){
+      if(name.startsWith("Vert Reeded")) return w <= 58 && h <= 82;
+      if(name.startsWith("Horz.")) return w <= 82 && h <= 58;
+      if(name.startsWith("Cascade Rain")) return h <= 82 && w <= 58;
+    }
+    return true;
+  }
+  if(dp !== "PG40") return false;
+
+  if(name==="Annealed") return ((d.ratio<=2 && d.area<=36 && d.mx<=142) || (d.ratio>2 && d.area<=29 && d.mx<=142));
+  if(name==="Tempered") return d.mx<=142 && d.mn<=82 && d.area<=60 && d.safety;
+  if(name==="Laminated") return ((d.ratio<=2 && d.area<=25 && d.mx<=90) || (d.ratio>2 && d.area<=21 && d.mx<=82));
+  if(name==="Laminated Tempered") return d.mx<=105 && d.mn<=55 && d.area<=25 && d.mx<=90 && d.safety;
+  if(name==="Fern Annealed") return d.mn<=58 && d.mx<=82 && ((d.ratio<=2 && d.area<=15) || (d.ratio>2 && d.area<=13));
+  if(name==="Fern Tempered") return d.mx<=82 && d.area<=20 && d.mn<=41 && d.safety;
+  if(name==="Obscure Annealed") return ((d.ratio<=2 && d.area<=27) || (d.ratio>2 && d.area<=21)) && d.mx<=82 && d.mn<=58;
+  if(name==="Obscure Tempered") return d.mx<=82 && d.mn<=58 && d.area<=50 && d.safety;
+
+  if(name==="Vert Reeded Annealed") return d.mx<=94 && ((d.ratio<=2 && d.area<=24) || (d.ratio>2 && d.area<=20)) && w<=58 && h<=82;
+  if(name==="Vert Reeded Tempered") return d.mx<=105 && d.mn<=55 && d.area<=30 && d.safety && w<=58 && h<=82;
+  if(name==="Horz. Reeded Annealed") return d.mx<=94 && ((d.ratio<=2 && d.area<=24) || (d.ratio>2 && d.area<=20)) && w<=82 && h<=58;
+  if(name==="Horz. Reeded Tempered") return d.mx<=96 && d.mn<=55 && d.area<=30 && d.safety && w<=82 && h<=58;
+  if(name==="Cascade Rain Annealed") return ((d.ratio<=2 && d.area<=27) || (d.ratio>2 && d.area<=21)) && h<=82 && w<=58;
+  if(name==="Cascade Rain Tempered") return h<=82 && w<=58 && d.area<=50 && d.safety;
+  return false;
+}
+
+function populateConfig(){
+  const old = config.value;
+  config.innerHTML = "";
+  configMap[unitType.value].forEach(c=>{
+    const opt = document.createElement("option");
+    opt.value = c; opt.textContent = c;
+    config.appendChild(opt);
+  });
+  if(configMap[unitType.value].includes(old)) config.value = old;
+}
+
+function updateCustomVisibility(){
+  const u=unitType.value, c=config.value;
+  const show = c==="Custom";
+  customWrap.className = show ? "grid2" : "hidden";
+  custom2Box.className = (show && (u==="CT" || u==="GT")) ? "field" : "hidden";
+  if(u==="DB") custom1Label.textContent = "Custom Checkrail Location";
+  else if(u==="GL") custom1Label.textContent = "Custom Meet Stile Location";
+  else if(u==="CT") { custom1Label.textContent = "Custom Mull Post Location 1"; custom2Label.textContent = "Custom Mull Post Location 2"; }
+  else if(u==="GT") { custom1Label.textContent = "Custom Meet Stile Location 1"; custom2Label.textContent = "Custom Meet Stile Location 2"; }
+  else custom1Label.textContent = "Custom Location 1";
+}
+
+function checkSize(){
+  const u=unitType.value, c=config.value;
+  const w=Number(widthInput.value)||0, h=Number(heightInput.value)||0;
+  const row = sizeGrid.find(r=>r[0]===u && r[1]===c);
+  if(!row) return "";
+  const ok = w>=row[2] && h>=row[3] && ((w<=row[4] && h<=row[5]) || (row[6] && w<=row[6] && h<=row[7]));
+  if(ok) return "";
+  return `Size is outside the spreadsheet grid for ${u} ${c}. Min: ${row[2]} × ${row[3]}. Max options: ${row[4]} × ${row[5]}${row[6] ? " or " + row[6] + " × " + row[7] : ""}.`;
+}
+
+function render(){
+  populateConfig();
+  updateCustomVisibility();
+  const sashes = calcSashes();
+  document.getElementById("sashCount").textContent = sashes.length;
+  const warn = checkSize();
+  const warnBox = document.getElementById("sizeWarning");
+  warnBox.textContent = warn;
+  warnBox.className = warn ? "warning" : "hidden";
+
+  document.getElementById("sashResults").innerHTML = sashes.map(s=>`
+    <div class="sash">
+      <div class="sashTitle">${s.name}</div>
+      <div class="resultTop">
+        <div class="stat"><small>Glass Width</small><b>${fmt(s.w)}</b></div>
+        <div class="stat"><small>Glass Height</small><b>${fmt(s.h)}</b></div>
+        <div class="stat ${s.area > 9 ? 'area-bad' : 'area-ok'}"><small>Area</small><b>${fmt(s.area)}</b></div>
+      </div>
+    </div>`).join("");
+}
+
+unitType.addEventListener("change",()=>{ populateConfig(); render(); });
+config.addEventListener("change",render);
+[widthInput,heightInput,custom1,custom2].forEach(el=>el.addEventListener("input",render));
+
+populateConfig();
+config.value = "1:1";
+render();
+</script>
+</body>
+</html>
